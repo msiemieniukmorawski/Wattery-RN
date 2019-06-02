@@ -12,6 +12,7 @@ import SignIn from "./components/signIn";
 import Dashboard from "./views/dashboard";
 import Profile from "./views/profile";
 import EditPassword from "./views/editPassword";
+import Loader from "./views/loadre";
 
 const ProfileNavigator = createStackNavigator({
   Profile: {
@@ -61,11 +62,12 @@ const AuthNavigator = createStackNavigator(
 
 const AppNavigator = createSwitchNavigator(
   {
+    Loader: Loader,
     Home: HomeNavigator,
     Auth: AuthNavigator
   },
   {
-    initialRouteName: "Home"
+    initialRouteName: "Loader"
   }
 );
 
@@ -82,9 +84,17 @@ export default class App extends Component {
     };
   }
 
-  componentDidMount() {
-    AsyncStorage.setItem("data", JSON.stringify(this.state.currentData));
-  }
+  componentDidMount = async () => {
+    const userData = await AsyncStorage.getItem("data");
+    if (userData === null) {
+      try {
+        await AsyncStorage.setItem(
+          "data",
+          JSON.stringify(this.state.currentData)
+        );
+      } catch (error) {}
+    }
+  };
 
   render() {
     return (

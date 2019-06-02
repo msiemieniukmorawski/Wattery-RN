@@ -11,22 +11,23 @@ export default class Profile extends Component {
     };
   }
 
-  componentDidMount() {
-    (getData = async () => {
-      try {
-        const value = await AsyncStorage.getItem("data");
-        if (value !== null) {
-          // We have data!!
-          this.setState({
-            data: JSON.parse(value)
-          });
-        }
-      } catch (error) {}
-    })();
-  }
+  componentDidMount = async () => {
+    try {
+      const value = await AsyncStorage.getItem("data");
+      if (value !== null) {
+        // We have data!!
+        this.setState({
+          data: JSON.parse(value)
+        });
+      }
+    } catch (error) {}
+  };
 
-  handleLogout = () => {
-    this.props.navigation.navigate("Auth");
+  handleLogout = async () => {
+    try {
+      await AsyncStorage.setItem("userToken", "");
+      await this.props.navigation.navigate("Auth");
+    } catch (error) {}
   };
 
   render() {

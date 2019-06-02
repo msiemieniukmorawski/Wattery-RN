@@ -22,19 +22,17 @@ class EditPassword extends Component {
     };
   }
 
-  componentDidMount() {
-    (getData = async () => {
-      try {
-        const value = await AsyncStorage.getItem("data");
-        if (value !== null) {
-          // We have data!!
-          this.setState({
-            data: JSON.parse(value)
-          });
-        }
-      } catch (error) {}
-    })();
-  }
+  componentDidMount = async () => {
+    try {
+      const value = await AsyncStorage.getItem("data");
+      if (value !== null) {
+        // We have data!!
+        this.setState({
+          data: JSON.parse(value)
+        });
+      }
+    } catch (error) {}
+  };
 
   validateForm = () => {
     if (this.state.passwordInput.length > 0 && !this.state.isPasswordInvalid) {
@@ -58,13 +56,13 @@ class EditPassword extends Component {
     });
   };
 
-  mockChange = () => {
+  mockChange = async () => {
     const newData = {
       ...this.state.data,
       password: this.state.passwordInput
     };
 
-    AsyncStorage.setItem("data", JSON.stringify(newData));
+    await AsyncStorage.setItem("data", JSON.stringify(newData));
 
     this.setState({
       PasswordChanged: true

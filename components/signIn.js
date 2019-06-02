@@ -69,10 +69,14 @@ class SignIn extends Component {
     });
   };
 
-  mockLogin = () => {
+  mockLogin = async () => {
     const { loginInput, passwordInput, data } = this.state;
+
     if (loginInput === data.login && passwordInput === data.password) {
-      this.props.navigation.navigate("Home");
+      try {
+        await AsyncStorage.setItem("userToken", "active");
+        await this.props.navigation.navigate("Home");
+      } catch (error) {}
     }
   };
 

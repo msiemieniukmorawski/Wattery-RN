@@ -45,7 +45,8 @@ export default class Dashboard extends Component {
 
     Animated.timing(this.state.fadeAnim, {
       toValue: 0,
-      duration: 1000
+      duration: 1000,
+      useNativeDriver: true
     }).start(() => this.setState({ fadeAnim: new Animated.Value(1) }));
 
     this.setState({
