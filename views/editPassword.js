@@ -8,6 +8,7 @@ import {
   Platform
 } from "react-native";
 import BasicButton from "../components/button";
+import { AsyncStorage } from "react-native";
 
 class EditPassword extends Component {
   constructor(props) {
@@ -16,8 +17,23 @@ class EditPassword extends Component {
       passwordInput: "",
       isPasswordInvalid: false,
       canSubmit: false,
-      PasswordChanged: false
+      PasswordChanged: false,
+      data: null
     };
+  }
+
+  componentDidMount() {
+    (getData = async () => {
+      try {
+        const value = await AsyncStorage.getItem("data");
+        if (value !== null) {
+          // We have data!!
+          this.setState({
+            data: JSON.parse(value)
+          });
+        }
+      } catch (error) {}
+    })();
   }
 
   validateForm = () => {
@@ -43,8 +59,13 @@ class EditPassword extends Component {
   };
 
   mockChange = () => {
-    const { changePassword } = this.props.screenProps;
-    changePassword(this.state.passwordInput);
+    const newData = {
+      ...this.state.data,
+      password: this.state.passwordInput
+    };
+
+    AsyncStorage.setItem("data", JSON.stringify(newData));
+
     this.setState({
       PasswordChanged: true
     });
@@ -52,6 +73,7 @@ class EditPassword extends Component {
 
   render() {
     const { PasswordChanged } = this.state;
+
     if (!PasswordChanged) {
       return (
         <KeyboardAvoidingView

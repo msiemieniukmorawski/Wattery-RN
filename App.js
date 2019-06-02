@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, SafeAreaView, Image } from "react-native";
+import { StyleSheet, SafeAreaView, Image, AsyncStorage } from "react-native";
 import {
   createSwitchNavigator,
   createAppContainer,
@@ -76,31 +76,20 @@ export default class App extends Component {
     super(props);
     this.state = {
       currentData: {
-        login: "kk",
-        password: "aaa"
+        login: "MSM",
+        password: "test"
       }
     };
-    this.changePassword = this.changePassword.bind(this);
   }
 
-  changePassword(text) {
-    this.setState({
-      currentData: {
-        ...this.state.currentData,
-        password: text
-      }
-    });
+  componentDidMount() {
+    AsyncStorage.setItem("data", JSON.stringify(this.state.currentData));
   }
 
   render() {
     return (
       <SafeAreaView style={styles.container}>
-        <AppContainer
-          screenProps={{
-            currentData: this.state.currentData,
-            changePassword: this.changePassword
-          }}
-        />
+        <AppContainer />
       </SafeAreaView>
     );
   }

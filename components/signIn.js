@@ -8,19 +8,35 @@ import {
   Platform
 } from "react-native";
 import BasicButton from "./button";
+import { AsyncStorage } from "react-native";
 
 class SignIn extends Component {
   state = {
     loginInput: "",
     passwordInput: "",
     isPasswordInvalid: false,
-    canSubmit: false
+    canSubmit: false,
+    data: null
   };
 
   // mockLogin = () => {
   //   if login==='mail.@mail.pl'
   //   && password === 'qwerty' => this.props.navigate.push('dashboard')
   // }
+
+  componentDidMount() {
+    (getData = async () => {
+      try {
+        const value = await AsyncStorage.getItem("data");
+        if (value !== null) {
+          // We have data!!
+          this.setState({
+            data: JSON.parse(value)
+          });
+        }
+      } catch (error) {}
+    })();
+  }
 
   validateForm = () => {
     if (
@@ -54,9 +70,8 @@ class SignIn extends Component {
   };
 
   mockLogin = () => {
-    const { login, password } = this.props.screenProps.currentData;
-    const { loginInput, passwordInput } = this.state;
-    if (loginInput === login && passwordInput === password) {
+    const { loginInput, passwordInput, data } = this.state;
+    if (loginInput === data.login && passwordInput === data.password) {
       this.props.navigation.navigate("Home");
     }
   };

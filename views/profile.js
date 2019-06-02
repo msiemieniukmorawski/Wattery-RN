@@ -1,11 +1,28 @@
 import React, { Component } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import BasicButton from "../components/button";
+import { AsyncStorage } from "react-native";
 
 export default class Profile extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      data: null
+    };
+  }
+
+  componentDidMount() {
+    (getData = async () => {
+      try {
+        const value = await AsyncStorage.getItem("data");
+        if (value !== null) {
+          // We have data!!
+          this.setState({
+            data: JSON.parse(value)
+          });
+        }
+      } catch (error) {}
+    })();
   }
 
   handleLogout = () => {
@@ -13,13 +30,14 @@ export default class Profile extends Component {
   };
 
   render() {
-    const { login } = this.props.screenProps.currentData;
+    const { data } = this.state;
+
     return (
       <View style={styles.container}>
         <Text style={styles.title}>
           {" "}
           <Text style={styles.titlePrefix}>Login: </Text>
-          {login}
+          {data ? data.login : null}
         </Text>
         <BasicButton
           title="Change Password"
